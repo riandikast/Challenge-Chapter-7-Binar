@@ -9,13 +9,13 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET("PopularMovie")
-    fun getPopularMovie(): Call<List<GetMoviee>>
+    suspend fun getPopularMovie(): List<GetMoviee>
 
     @GET("NewMovieAndika")
-    fun getNewMovie(): Call<List<GetMoviee>>
+    suspend fun getNewMovie(): List<GetMoviee>
 
     @GET("RecMovieAndika")
-    fun getRecMovie(): Call<List<GetMoviee>>
+    suspend fun getRecMovie(): List<GetMoviee>
 
     @GET("UserAndika")
     fun getAllNewUser(): Call<List<GetAllUserItem>>

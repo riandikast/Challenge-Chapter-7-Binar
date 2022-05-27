@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.listfilm.andika.R
 import com.listfilm.andika.view.adapter.AdapterHome
 import com.listfilm.andika.viewmodel.ViewModelMovie
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.stream.Collectors.toList
 
@@ -94,7 +95,7 @@ class HomeFragment : Fragment() {
     fun getPopularFilm(){
 
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
-        viewModel.getLiveFilmObserver().observe(requireActivity()) {
+        viewModel.popularMovie.observe(requireActivity()) {
             if(it != null){
 
                 adapterpopular .setDataFilm(it)
@@ -102,30 +103,31 @@ class HomeFragment : Fragment() {
 
             }
         }
-        viewModel.PopularMovieApi()
+
     }
 
 
     fun getNewFilm(){
+
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
-        viewModel.getLiveNewFilmObserver().observe(requireActivity()) {
+        viewModel.newFilm.observe(requireActivity()) {
             if(it != null){
                 adapternewfilm.setDataFilm(it)
                 adapternewfilm.notifyDataSetChanged()
             }
         }
-        viewModel.NewMovieApi()
+
     }
 
     fun getRecFilm(){
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
-        viewModel.getLiveRecFilmObserver().observe(requireActivity()) {
+        viewModel.recommendedMovie.observe(requireActivity()) {
             if(it != null){
                 adapterrecommend.setDataFilm(it)
                 adapterrecommend.notifyDataSetChanged()
             }
         }
-        viewModel.RecMovieApi()
+
     }
 
 

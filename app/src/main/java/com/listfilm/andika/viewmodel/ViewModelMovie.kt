@@ -1,98 +1,66 @@
 package com.listfilm.andika.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.listfilm.andika.model.movie.GetMoviee
 
+import com.listfilm.andika.network.ApiService
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-import com.listfilm.andika.network.ApiClient
-import retrofit2.Call
-import retrofit2.Response
+import javax.inject.Inject
+
+@HiltViewModel
+class ViewModelMovie  @Inject constructor(api : ApiService): ViewModel() {
+
+    var liveDataNewFilm = MutableLiveData<List<GetMoviee>>()
+    val newFilm : LiveData<List<GetMoviee>> = liveDataNewFilm
+    var liveDataPopularFilm = MutableLiveData<List<GetMoviee>>()
+    val popularMovie : LiveData<List<GetMoviee>> = liveDataPopularFilm
+    var liveDataRecFilm = MutableLiveData<List<GetMoviee>>()
+    val recommendedMovie : LiveData<List<GetMoviee>> = liveDataRecFilm
 
 
-class ViewModelMovie (): ViewModel() {
-    var liveDataFilm : MutableLiveData<List<GetMoviee>> = MutableLiveData()
-    var liveDataNewFilm : MutableLiveData<List<GetMoviee>> = MutableLiveData()
-    var liveDataRecFilm : MutableLiveData<List<GetMoviee>> = MutableLiveData()
+    init {
+        viewModelScope.launch {
+            val datanewmovie = api.getNewMovie()
+            delay(2000)
+            liveDataNewFilm.value = datanewmovie
 
-    fun getLiveFilmObserver() : MutableLiveData<List<GetMoviee>> {
-        return liveDataFilm
+        viewModelScope.launch {
+            val datapopularmovie = api.getPopularMovie()
+            delay(2000)
+            liveDataNewFilm.value = datapopularmovie
+        }
+            viewModelScope.launch {
+            val datarecommendmovie = api.getRecMovie()
+            delay(2000)
+            liveDataNewFilm.value = datarecommendmovie
+        }
     }
 
-    fun getLiveNewFilmObserver() : MutableLiveData<List<GetMoviee>> {
-        return liveDataNewFilm
-    }
 
-    fun getLiveRecFilmObserver() : MutableLiveData<List<GetMoviee>> {
-        return liveDataRecFilm
-    }
+//    init {
+//        viewModelScope.launch {
+//            val datapopularmovie = api.getPopularMovie()
+//            delay(2000)
+//            liveDataNewFilm.value = datapopularmovie
+//        }
+//    }
 
 
 
-    fun PopularMovieApi(){
-        ApiClient.instance.getPopularMovie()
-            .enqueue(object : retrofit2.Callback<List<GetMoviee>>{
-                override fun onResponse(
-                    call: Call<List<GetMoviee>>,
-                    response: Response<List<GetMoviee>>
-                ) {
-                    if (response.isSuccessful){
-                        liveDataFilm.postValue(response.body())
+//    init {
+//        viewModelScope.launch {
+//            val datarecommendmovie = api.getRecMovie()
+//            delay(2000)
+//            liveDataNewFilm.value = datarecommendmovie
+//        }
+//    }
 
-                    }else{
-                        liveDataFilm.postValue(null)
 
-                    }
-                }
-
-                override fun onFailure(call: Call<List<GetMoviee>>, t: Throwable) {
-                    liveDataFilm.postValue(null)
-                }
-            })
-            }
-
-    fun NewMovieApi(){
-        ApiClient.instance.getNewMovie()
-            .enqueue(object : retrofit2.Callback<List<GetMoviee>>{
-                override fun onResponse(
-                    call: Call<List<GetMoviee>>,
-                    response: Response<List<GetMoviee>>
-                ) {
-                    if (response.isSuccessful){
-                        liveDataNewFilm.postValue(response.body())
-
-                    }else{
-                        liveDataNewFilm.postValue(null)
-
-                    }
-                }
-
-                override fun onFailure(call: Call<List<GetMoviee>>, t: Throwable) {
-                    liveDataNewFilm.postValue(null)
-                }
-            })
-    }
-
-    fun RecMovieApi(){
-        ApiClient.instance.getRecMovie()
-            .enqueue(object : retrofit2.Callback<List<GetMoviee>>{
-                override fun onResponse(
-                    call: Call<List<GetMoviee>>,
-                    response: Response<List<GetMoviee>>
-                ) {
-                    if (response.isSuccessful){
-                        liveDataRecFilm .postValue(response.body())
-
-                    }else{
-                        liveDataRecFilm .postValue(null)
-
-                    }
-                }
-
-                override fun onFailure(call: Call<List<GetMoviee>>, t: Throwable) {
-                    liveDataRecFilm .postValue(null)
-                }
-            })
-    }
-}
+}}
 
