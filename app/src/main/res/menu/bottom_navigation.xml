@@ -5,11 +5,7 @@
         android:title="Home"
         android:icon="@drawable/home">
     </item>
-    <item
-        android:id="@+id/popularFragment"
-        android:title="Popular"
-        android:icon="@drawable/popular">
-    </item>
+
     <item
         android:id="@+id/favoriteFragment"
         android:title="Favorite"

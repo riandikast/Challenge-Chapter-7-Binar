@@ -1,16 +1,23 @@
 package com.listfilm.andika.view.fragment
 
+import UserManager
 import android.Manifest
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -20,6 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.navigation.findNavController
+
 import com.bumptech.glide.Glide
 import com.listfilm.andika.R
 import com.listfilm.andika.model.update.UpdateResponse
@@ -29,6 +37,8 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.logout_dialog.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
+import javax.xml.datatype.DatatypeConstants.MONTHS
 
 
 class ProfileFragment : Fragment() {
@@ -38,9 +48,13 @@ class ProfileFragment : Fragment() {
     lateinit var email : String
     lateinit var password : String
     lateinit var idUser : String
-    lateinit var userManager : com.binar.challengechapterenam.datastore.UserManager
+    lateinit var userManager : UserManager
     lateinit var image : String
+    lateinit var cn : String
+    lateinit var dateofbirth : String
+    lateinit var address : String
     lateinit var dataUser : UpdateResponse
+    lateinit var toast : String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +62,15 @@ class ProfileFragment : Fragment() {
 
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        userManager = com.binar.challengechapterenam.datastore.UserManager(requireContext())
+        userManager = UserManager(requireContext())
         userManager.userImage.asLiveData().observe(requireActivity()){
-            if (it !==""){
-                Glide.with(requireContext()).load(it).into(view.pp)
+            if (it !="" && it != null){
                 image = it
+                Log.d("www" , image)
+                Glide.with(requireActivity()).load( it ).into(view.pp2)
             }else{
                 image = ""
+                Log.d("www" , image)
             }
         }
         userManager.userUsername.asLiveData().observe(requireActivity()){
@@ -83,9 +99,9 @@ class ProfileFragment : Fragment() {
                 idUser = it
             }
             username = view.update1.text.toString()
-            val cn = view.update2.text.toString()
-            val dateofbirth = view.update3.text.toString()
-            val address = view.update4.text.toString()
+            cn = view.update2.text.toString()
+            dateofbirth = view.update3.text.toString()
+            address = view.update4.text.toString()
 
             GlobalScope.launch {
                 userManager.saveDataUser(idUser , email, password, username, cn, dateofbirth, address, image )
@@ -96,6 +112,11 @@ class ProfileFragment : Fragment() {
             view.findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
 
         }
+
+        view.update3.setOnClickListener{
+           datePicker()
+        }
+
         view.btnlogout.setOnClickListener {
             val custom = LayoutInflater.from(requireContext()).inflate(R.layout.logout_dialog, null)
             val a = AlertDialog.Builder(requireContext())
@@ -107,8 +128,11 @@ class ProfileFragment : Fragment() {
             }
 
             custom.btnlogoutya.setOnClickListener {
+
                 GlobalScope.launch {
                     userManager.deleteDataLogin()
+                    userManager.deleteDataUser()
+
                 }
                 a.dismiss()
                 view.findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
@@ -127,10 +151,12 @@ class ProfileFragment : Fragment() {
     fun updateDataUser(id : Int, dataUser : UpdateResponse){
         viewModel = ViewModelProvider(this).get(ViewModelUser::class.java)
         viewModel.getLiveUpdateObserver().observe(requireActivity(), Observer {
-            if (it  == null){
-                Toast.makeText(requireContext(), "Gagal Update Data", Toast.LENGTH_LONG ).show()
+            if (it  != null){
+                toast = " Berhasil Update Data"
+                customSuccessToast(requireContext(), toast)
             }else{
-                Toast.makeText(requireContext(), "Berhasil Update Data", Toast.LENGTH_LONG ).show()
+                toast = "Gagal Update Data"
+                customFailureToast(requireContext(), toast)
             }
         })
         viewModel.updateDataUser(id, dataUser)
@@ -202,4 +228,95 @@ class ProfileFragment : Fragment() {
 
         }
     }
+
+    fun customFailureToast(context: Context?, msg: String?) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.error_toast, null)
+        val text = layout.findViewById<View>(R.id.errortext) as? TextView
+        text?.text = msg
+        text?.setPadding(20, 0, 20, 0)
+        text?.textSize = 22f
+        text?.setTextColor(Color.WHITE)
+        val toast = Toast(context)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = Toast.LENGTH_SHORT
+        layout.setBackgroundColor(Color.DKGRAY)
+        toast.setView(layout)
+        toast.show()
+    }
+
+    fun customSuccessToast(context: Context?, msg: String?) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.success_toast, null)
+        val text = layout.findViewById<View>(R.id.successtext) as? TextView
+        text?.text = msg
+        text?.setPadding(20, 0, 20, 0)
+        text?.textSize = 22f
+        text?.setTextColor(Color.WHITE)
+        val toast = Toast(context)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = Toast.LENGTH_SHORT
+        layout.setBackgroundColor(Color.DKGRAY)
+        toast.setView(layout)
+        toast.show()
+    }
+
+    fun datePicker(){
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        var m = ""
+
+        val dpd = DatePickerDialog(requireContext(), { _, year, monthOfYear, dayOfMonth ->
+
+            // Display Selected date in textbox
+            when (monthOfYear){
+                0 ->{
+                    m  = "January"
+                }
+                1 ->{
+                    m  = "February"
+                }
+                2 ->{
+                    m  = "March"
+                }
+                3 ->{
+                    m  = "April"
+                }
+                4 ->{
+                    m  = "May"
+                }
+                5 ->{
+                    m  = "June"
+                }
+                6 ->{
+                    m  = "July"
+                }
+                7 ->{
+                    m  = "August"
+                }
+                8 ->{
+                    m  = "September"
+                }
+                9 ->{
+                    m  = "October"
+                }
+                10 ->{
+                    m  = "November"
+                }
+                11 ->{
+                    m  = "December"
+                }
+
+            }
+
+
+            update3.setText("" + dayOfMonth + " " + m + ", " + year)
+
+        }, year, month, day)
+
+        dpd.show()
+    }
+
 }

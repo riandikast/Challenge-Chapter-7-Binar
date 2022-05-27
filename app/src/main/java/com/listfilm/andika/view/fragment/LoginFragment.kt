@@ -1,5 +1,9 @@
 package com.listfilm.andika.view.fragment
 
+import UserManager
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -12,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.listfilm.andika.R
 import com.listfilm.andika.model.user.GetAllUserItem
@@ -19,7 +24,7 @@ import com.listfilm.andika.viewmodel.ViewModelUser
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
+import kotlin.properties.Delegates
 
 
 class LoginFragment : Fragment() {
@@ -29,7 +34,8 @@ class LoginFragment : Fragment() {
     lateinit var email: String
     lateinit var password: String
     lateinit var toast : String
-    lateinit var userManager : com.binar.challengechapterenam.datastore.UserManager
+    var salah by Delegates.notNull<Boolean>()
+    lateinit var userManager : UserManager
 
 
     override fun onCreateView(
@@ -38,12 +44,12 @@ class LoginFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_login, container, false)
-        userManager = com.binar.challengechapterenam.datastore.UserManager(requireContext())
-        getDataUserItem()
+        userManager = UserManager(requireContext())
+
 
         val daftar = view.findViewById<TextView>(R.id.daftar2)
         val login = view.findViewById<Button>(R.id.btnlogin)
-
+        getDataUserItem()
         daftar.setOnClickListener {
             view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
@@ -52,12 +58,13 @@ class LoginFragment : Fragment() {
             if (loginemail.text.isNotEmpty() && loginpassword.text.isNotEmpty()){
                 email = loginemail.text.toString()
                 password = loginpassword.text.toString()
-                check(dataUser)
+
+                check()
 
             }
             else{
                 toast = "Harap Isi Semua Data"
-                customToast()
+                customFailureToast(requireContext(), toast)
             }
         }
         return view
@@ -73,8 +80,9 @@ class LoginFragment : Fragment() {
         viewModel.userApi()
     }
 
-    fun check(dataUser : List<GetAllUserItem>) {
-        userManager = com.binar.challengechapterenam.datastore.UserManager(requireContext())
+    fun check() {
+        userManager = UserManager(requireContext())
+
         for (i in dataUser.indices) {
             if (email == dataUser[i].email && password == dataUser[i].password) {
                 GlobalScope.launch {
@@ -82,42 +90,70 @@ class LoginFragment : Fragment() {
                     userManager.saveDataLogin("true")
                     userManager.saveDataUser(dataUser[i].id, dataUser[i].email, dataUser[i].password, dataUser[i].username, dataUser[i].completeName,dataUser[i].dateofbirth, dataUser[i].address, dataUser[i].image )
                 }
-                loginNew(email, password)
+
+
+                toast = "Login Berhasil"
+                customSuccessToast(requireContext(), toast)
+
                 view?.findNavController()
-                    ?.navigate(R.id.action_loginFragment_to_homeFragment)
+                    ?.navigate(R.id.action_loginFragment_to_homeFragment, null,
+                        NavOptions.Builder()
+                            .setPopUpTo(
+                                R.id.loginFragment,
+                                true
+                            ).build())
+                salah = false
                 break
+
+            }else{
+                salah = true
+
+
             }
+
+        }
+        if (salah){
+            toast = "Email atau Password Salah"
+            customFailureToast(requireContext(), toast)
         }
     }
 
-    fun loginNew(email :String, password : String){
-        viewModel = ViewModelProvider(this).get(ViewModelUser::class.java)
-        viewModel.getLiveLoginObserver().observe(requireActivity(), Observer {
-            if (it  == null){
-                Toast.makeText(requireContext(), "Gagal Login", Toast.LENGTH_LONG ).show()
-            }else{
-                Toast.makeText(requireContext(), "Berhasil Login", Toast.LENGTH_LONG ).show()
-            }
-        })
-        viewModel.login(email, password)
+
+
+
+    fun customFailureToast(context: Context?, msg: String?) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.error_toast, null)
+        val text = layout.findViewById<View>(R.id.errortext) as? TextView
+        text?.text = msg
+        text?.setPadding(20, 0, 20, 0)
+        text?.textSize = 22f
+        text?.setTextColor(Color.WHITE)
+        val toast = Toast(context)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = Toast.LENGTH_SHORT
+        layout.setBackgroundColor(Color.DKGRAY)
+        toast.setView(layout)
+        toast.show()
     }
 
-    fun customToast(){
-        val text = toast
-        val toast = Toast.makeText(
-            requireActivity()?.getApplicationContext(),
-            text,
-            Toast.LENGTH_LONG
-        )
-        val text1 =
-            toast.getView()?.findViewById(android.R.id.message) as TextView
-        val toastView: View? = toast.getView()
-        toastView?.setBackgroundColor(Color.TRANSPARENT)
-        text1.setTextColor(Color.RED);
-        text1.setTextSize(15F)
+    fun customSuccessToast(context: Context?, msg: String?) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.success_toast, null)
+        val text = layout.findViewById<View>(R.id.successtext) as? TextView
+        text?.text = msg
+        text?.setPadding(20, 0, 20, 0)
+        text?.textSize = 22f
+        text?.setTextColor(Color.WHITE)
+        val toast = Toast(context)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = Toast.LENGTH_SHORT
+        layout.setBackgroundColor(Color.DKGRAY)
+        toast.setView(layout)
         toast.show()
-        toast.setGravity(Gravity.CENTER or Gravity.TOP, 0, 960)
     }
+
+
 
 
 

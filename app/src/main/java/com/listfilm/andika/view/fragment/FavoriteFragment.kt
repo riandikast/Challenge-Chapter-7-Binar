@@ -1,5 +1,6 @@
 package com.listfilm.andika.view.fragment
 
+import UserManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,9 +10,9 @@ import android.view.ViewGroup
 
 import androidx.lifecycle.asLiveData
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 
-import com.binar.challengechapterenam.datastore.UserManager
 
 import com.listfilm.andika.R
 import com.listfilm.andika.room.FavoriteDB
@@ -47,9 +48,7 @@ class FavoriteFragment : Fragment() {
         userManager.userUsername.asLiveData().observe(requireActivity()){
             view.welcomefav.text = it.toString()
         }
-        view.home.setOnClickListener {
-            view.findNavController().navigate(R.id.action_favoriteFragment_to_homeFragment)
-        }
+
         view.profilefav.setOnClickListener {
             view.findNavController().navigate(R.id.action_favoriteFragment_to_profileFragment)
         }
@@ -80,7 +79,7 @@ class FavoriteFragment : Fragment() {
             }
 
         }
-        view.listfav.layoutManager = LinearLayoutManager(requireContext())
+        view.listfav.layoutManager = GridLayoutManager(requireContext(),3)
 
 
         return view

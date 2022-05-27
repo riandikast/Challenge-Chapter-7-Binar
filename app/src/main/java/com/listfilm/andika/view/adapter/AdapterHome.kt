@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.listfilm.andika.R
-import com.listfilm.andika.model.movie.GetMovie
+import com.listfilm.andika.model.movie.GetMoviee
 import kotlinx.android.synthetic.main.item_film.view.*
 
-class AdapterHome (private val onclick : (GetMovie)->Unit) : RecyclerView.Adapter<AdapterHome.ViewHolder>() {
+class AdapterHome (private val onclick : (GetMoviee)->Unit) : RecyclerView.Adapter<AdapterHome.ViewHolder>() {
     class ViewHolder(view : View) : RecyclerView.ViewHolder(view)
-    var datafilm : List<GetMovie>? = null
+    var datafilm : List<GetMoviee>? = null
 
 
-    fun setDataFilm(film  : List<GetMovie>){
+    fun setDataFilm(film  : List<GetMoviee>){
         this.datafilm = film
     }
 

@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.listfilm.andika.R
 import com.listfilm.andika.room.FavoriteFilm
 import kotlinx.android.synthetic.main.item_fav.view.*
+import kotlinx.android.synthetic.main.item_favorite.view.*
 
 
 class AdapterFavorite (var onclick : (FavoriteFilm)-> Unit) : RecyclerView.Adapter<AdapterFavorite.ViewHolder>() {
@@ -18,18 +19,15 @@ class AdapterFavorite (var onclick : (FavoriteFilm)-> Unit) : RecyclerView.Adapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemview = LayoutInflater.from(parent.context).inflate(R.layout.item_fav, parent,false)
+        val itemview = LayoutInflater.from(parent.context).inflate(R.layout.item_favorite, parent,false)
         return ViewHolder(itemview)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(holder.itemView.context).load(datafav!![position].image).into(holder.itemView.gambarv)
+        Glide.with(holder.itemView.context).load(datafav!![position].image).into(holder.itemView.gambarfav)
+        holder.itemView.text1fav.text = datafav!![position].title
 
-        holder.itemView.text1v.text = datafav!![position].title
-        holder.itemView.text2v.text = datafav!![position].director
-        holder.itemView.text3v.text = datafav!![position].releaseDate
-
-        holder.itemView.cardv.setOnClickListener {
+        holder.itemView.cardfav.setOnClickListener {
             onclick(datafav!![position])
         }
     }

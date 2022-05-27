@@ -1,5 +1,6 @@
 package com.listfilm.andika.view.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -13,15 +14,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.listfilm.andika.R
-
 import com.listfilm.andika.model.user.GetAllUserItem
+
 import com.listfilm.andika.viewmodel.ViewModelUser
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class RegisterFragment : Fragment() {
@@ -66,18 +64,20 @@ class RegisterFragment : Fragment() {
                         regisUser(username, regisemailtext, password)
                         view.findNavController()
                             .navigate(R.id.action_registerFragment_to_loginFragment)
+
+
                     } else {
                         toast = "Email Sudah Terdaftar"
-                        customToast()
+                        customFailureToast(requireContext(), toast)
                     }
 
                 } else {
                     toast = "Konfirmasi Password Tidak Sesuai"
-                    customToast()
+                    customFailureToast(requireContext(), toast)
                 }
             } else {
                 toast = "Harap isi semua data"
-                customToast()
+                customFailureToast(requireContext(), toast)
             }
         }
        return view
@@ -87,10 +87,12 @@ class RegisterFragment : Fragment() {
     fun regisUser(username: String, email: String, password: String) {
         viewModel = ViewModelProvider(this).get(ViewModelUser::class.java)
         viewModel.getLiveRegisObserver().observe(requireActivity(), Observer {
-            if (it  == null){
-                Toast.makeText(requireContext(), "Gagal Register", Toast.LENGTH_LONG ).show()
+            if (it  != null){
+                toast = "Registrasi Berhasil"
+                customSuccessToast(requireContext(), toast)
             }else{
-                Toast.makeText(requireContext(), "Berhasil Register", Toast.LENGTH_LONG ).show()
+                toast = "Registrasi Gagal"
+                customFailureToast(requireContext(), toast)
             }
         })
         viewModel.regisUser(username,email,password)
@@ -104,20 +106,37 @@ class RegisterFragment : Fragment() {
         viewModel.userApi()
     }
 
-    fun customToast() {
-        val text = toast
-        val toast = Toast.makeText(
-            requireActivity()?.getApplicationContext(),
-            text,
-            Toast.LENGTH_LONG
-        )
-        val text1 =
-            toast.getView()?.findViewById(android.R.id.message) as TextView
-        val toastView: View? = toast.getView()
-        toastView?.setBackgroundColor(Color.TRANSPARENT)
-        text1.setTextColor(Color.RED);
-        text1.setTextSize(15F)
+
+
+    fun customFailureToast(context: Context?, msg: String?) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.error_toast, null)
+        val text = layout.findViewById<View>(R.id.errortext) as? TextView
+        text?.text = msg
+        text?.setPadding(20, 0, 20, 0)
+        text?.textSize = 22f
+        text?.setTextColor(Color.WHITE)
+        val toast = Toast(context)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = Toast.LENGTH_SHORT
+        layout.setBackgroundColor(Color.DKGRAY)
+        toast.setView(layout)
         toast.show()
-        toast.setGravity(Gravity.CENTER or Gravity.TOP, 0, 1420)
+    }
+
+    fun customSuccessToast(context: Context?, msg: String?) {
+        val inflater = LayoutInflater.from(context)
+        val layout: View = inflater.inflate(R.layout.success_toast, null)
+        val text = layout.findViewById<View>(R.id.successtext) as? TextView
+        text?.text = msg
+        text?.setPadding(20, 0, 20, 0)
+        text?.textSize = 22f
+        text?.setTextColor(Color.WHITE)
+        val toast = Toast(context)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = Toast.LENGTH_SHORT
+        layout.setBackgroundColor(Color.DKGRAY)
+        toast.setView(layout)
+        toast.show()
     }
 }

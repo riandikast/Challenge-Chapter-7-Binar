@@ -27,7 +27,9 @@ data class FavoriteFilm(
     val synopsis: String,
     @ColumnInfo(name = "title")
     val title: String,
-    @ColumnInfo(name = "status")
-    val isfav: String
+    @ColumnInfo(name = "demo")
+    val demo: String,
+    @ColumnInfo(name = "favtype")
+    val favtype: String
 ):Parcelable
 

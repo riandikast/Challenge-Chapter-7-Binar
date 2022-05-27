@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [FavoriteFilm::class],
-    version = 5
+    version = 9
 )
 abstract class FavoriteDB : RoomDatabase(){
     abstract fun getFavoriteDao():FavoriteFilmDao

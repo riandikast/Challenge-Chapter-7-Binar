@@ -1,7 +1,7 @@
 package com.listfilm.andika.network
 
-import com.listfilm.andika.model.login.LoginResponse
-import com.listfilm.andika.model.movie.GetMovie
+import com.listfilm.andika.model.movie.GetMoviee
+
 import com.listfilm.andika.model.update.UpdateResponse
 import com.listfilm.andika.model.user.GetAllUserItem
 import retrofit2.Call
@@ -9,10 +9,13 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET("PopularMovie")
-    fun getPopularMovie(): Call<List<GetMovie>>
+    fun getPopularMovie(): Call<List<GetMoviee>>
 
     @GET("NewMovieAndika")
-    fun getNewMovie(): Call<List<GetMovie>>
+    fun getNewMovie(): Call<List<GetMoviee>>
+
+    @GET("RecMovieAndika")
+    fun getRecMovie(): Call<List<GetMoviee>>
 
     @GET("UserAndika")
     fun getAllNewUser(): Call<List<GetAllUserItem>>
@@ -22,12 +25,9 @@ interface ApiService {
         @Body user : UpdateResponse, @Path("id") id : String
     ): Call<GetAllUserItem>
 
-    @POST("LoginAndika ")
-    @FormUrlEncoded
-    fun loginNewUser(
-        @Field("email") email: String,
-        @Field("password") password: String,
-    ): Call<LoginResponse>
+
+    @GET("UserAndika")
+    fun Login(@Query("email") email : String) : Call<List<GetAllUserItem>>
 
     @POST("UserAndika")
     @FormUrlEncoded

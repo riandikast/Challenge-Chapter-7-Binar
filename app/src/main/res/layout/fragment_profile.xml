@@ -34,6 +34,17 @@
             app:civ_border_width="2dp"
             app:civ_border_color="#FF000000"/>
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pp2"
+            android:layout_marginTop="20dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/pp"
+            android:layout_gravity="center_horizontal"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -94,10 +105,13 @@
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_gravity="center_horizontal"
-        app:passwordToggleEnabled="true"
+        android:id="@+id/inputdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+
         <EditText
+            android:focusableInTouchMode="false"
             android:textSize="20sp"
             android:hint="Masukkan Tanggal Lahir"
             android:layout_marginTop="30dp"
@@ -113,7 +127,7 @@
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_gravity="center_horizontal"
-        app:passwordToggleEnabled="true"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

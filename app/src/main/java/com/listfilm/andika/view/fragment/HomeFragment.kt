@@ -1,6 +1,7 @@
 package com.listfilm.andika.view.fragment
 
 
+import UserManager
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,19 +12,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.binar.challengechapterenam.datastore.UserManager
+
 import com.listfilm.andika.R
 import com.listfilm.andika.view.adapter.AdapterHome
 import com.listfilm.andika.viewmodel.ViewModelMovie
 import kotlinx.android.synthetic.main.fragment_home.view.*
-
+import java.util.stream.Collectors.toList
 
 
 class HomeFragment : Fragment() {
 
     lateinit var adapternewfilm : AdapterHome
     lateinit var adapterrecommend : AdapterHome
-    lateinit var adaptertopselling :AdapterHome
+    lateinit var adapterpopular :AdapterHome
     lateinit var userManager : UserManager
     lateinit var email : String
 
@@ -34,7 +35,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         var homelinear = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
+        var poplinear = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        var reclinear = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         //New Movie~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         adapternewfilm = AdapterHome(){
@@ -43,30 +45,35 @@ class HomeFragment : Fragment() {
             view.findNavController().navigate(R.id.action_homeFragment_to_detailFragment,bund)
 
         }
+
         view.list.adapter = adapternewfilm
         view.list.layoutManager = homelinear
         getNewFilm()
 
-//        //Recommended Movie~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
-//        adapterrecommend  = AdapterHome(){
-//            val bund = Bundle()
-//            bund.putParcelable("detailfilm", it)
-//            view.findNavController().navigate(R.id.action_homeFragment_to_detailFragment,bund)
-//
-//        }
-//        view.listrecommend.adapter = adapterrecommend
-//        view.listrecommend.layoutManager = homelinear
-//
-//        //Top Selling Movie~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//        adaptertopselling = AdapterHome(){
-//            val bund = Bundle()
-//            bund.putParcelable("detailfilm", it)
-//            view.findNavController().navigate(R.id.action_homeFragment_to_detailFragment,bund)
-//
-//        }
-//        view.listrecommend.adapter = adaptertopselling
-//        view.listrecommend.layoutManager = homelinear
+        //Popular Movie~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        adapterpopular = AdapterHome(){
+            val bund = Bundle()
+            bund.putParcelable("detailfilm", it)
+            view.findNavController().navigate(R.id.action_homeFragment_to_detailFragment,bund)
+
+        }
+        view.listpopular.adapter = adapterpopular
+        view.listpopular.layoutManager = poplinear
+        getPopularFilm()
+
+        //Recommended Movie~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        adapterrecommend  = AdapterHome(){
+            val bund = Bundle()
+            bund.putParcelable("detailfilm", it)
+            view.findNavController().navigate(R.id.action_homeFragment_to_detailFragment,bund)
+
+        }
+        view.listrecommend.layoutManager = reclinear
+        view.listrecommend.adapter = adapterrecommend
+
+        getRecFilm()
+
 
 
         userManager = UserManager(requireContext())
@@ -74,31 +81,29 @@ class HomeFragment : Fragment() {
             view.welcome.text = it.toString()
         }
 
-
         view.profile.setOnClickListener {
             view.findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
-        view.homelove.setOnClickListener {
-            view.findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
-        }
+
 
         return view
     }
 
 
-//    fun getPopularFilm(){
-//
-//        val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
-//        viewModel.getLiveFilmObserver().observe(requireActivity()) {
-//            if(it != null){
-//                adapterfilm.setDataFilm(it)
-//                adapterfilm.notifyDataSetChanged()
-//                adapternew.setDataFilm(it)
-//                adapternew.notifyDataSetChanged()
-//            }
-//        }
-//        viewModel.makeFilmApi()
-//    }
+
+    fun getPopularFilm(){
+
+        val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
+        viewModel.getLiveFilmObserver().observe(requireActivity()) {
+            if(it != null){
+
+                adapterpopular .setDataFilm(it)
+                adapterpopular .notifyDataSetChanged()
+
+            }
+        }
+        viewModel.PopularMovieApi()
+    }
 
 
     fun getNewFilm(){
@@ -111,4 +116,17 @@ class HomeFragment : Fragment() {
         }
         viewModel.NewMovieApi()
     }
+
+    fun getRecFilm(){
+        val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
+        viewModel.getLiveRecFilmObserver().observe(requireActivity()) {
+            if(it != null){
+                adapterrecommend.setDataFilm(it)
+                adapterrecommend.notifyDataSetChanged()
+            }
+        }
+        viewModel.RecMovieApi()
+    }
+
+
 }

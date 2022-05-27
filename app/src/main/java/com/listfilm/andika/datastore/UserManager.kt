@@ -1,4 +1,4 @@
-package com.binar.challengechapterenam.datastore
+
 
 import android.content.Context
 import androidx.datastore.DataStore
@@ -32,6 +32,13 @@ class UserManager (context : Context) {
             it[BIRTH] = birth
             it[ADDRESS] = address
             it[IMAGE] = image
+        }
+    }
+
+    suspend fun deleteDataUser() {
+        dataStore.edit{
+            it.clear()
+
         }
     }
 

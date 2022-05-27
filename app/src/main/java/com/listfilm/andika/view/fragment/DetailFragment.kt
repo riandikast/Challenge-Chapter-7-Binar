@@ -1,18 +1,22 @@
 package com.listfilm.andika.view.fragment
 
+import UserManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+
+
 import androidx.lifecycle.asLiveData
 import com.bumptech.glide.Glide
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
+import com.google.android.youtube.player.YouTubePlayerSupportFragmentXKt
 import com.listfilm.andika.R
-import com.listfilm.andika.model.movie.GetMovie
+import com.listfilm.andika.model.movie.GetMoviee
 import com.listfilm.andika.room.FavoriteDB
 import com.listfilm.andika.room.FavoriteFilm
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -20,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlin.properties.Delegates
+
 
 
 class DetailFragment : Fragment() {
@@ -36,10 +41,11 @@ class DetailFragment : Fragment() {
     lateinit var image: String
     lateinit var email : String
     lateinit var trailer : String
-    lateinit var userManager : com.binar.challengechapterenam.datastore.UserManager
+    lateinit var type : String
+    lateinit var userManager : UserManager
 
     lateinit var toggleFavorite : String
-    var alreadyFavorite by Delegates.notNull<Boolean>()
+
 
 
     override fun onCreateView(
@@ -49,8 +55,8 @@ class DetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
-        userManager = com.binar.challengechapterenam.datastore.UserManager(requireContext())
-        val getfilm = arguments?.getParcelable<GetMovie>("detailfilm")
+        userManager = UserManager(requireContext())
+        val getfilm = arguments?.getParcelable<GetMoviee>("detailfilm")
         val getfilmfromfav = arguments?.getParcelable<FavoriteFilm>("detailfilmfromfav")
         db = FavoriteDB.getInstance(requireActivity())
 
@@ -68,6 +74,7 @@ class DetailFragment : Fragment() {
             image = getfilm.image.toString()
             releaseDate = getfilm.releaseDate
             trailer = getfilm.demo
+            type = getfilm.type
 
         }
 
@@ -85,27 +92,29 @@ class DetailFragment : Fragment() {
             synopsis = getfilmfromfav.synopsis
             image = getfilmfromfav.image
             releaseDate = getfilmfromfav.releaseDate
+            trailer = getfilmfromfav.demo
+            type = getfilmfromfav.favtype
 
         }
 
         email = ""
         toggleFavorite = "false"
-        alreadyFavorite = false
+
 
         userManager.userEmail.asLiveData().observe(requireActivity()){
             email = it
             GlobalScope.async {
-                film = db?.getFavoriteDao()?.checkFav(email, id.toInt())
+                film = db?.getFavoriteDao()?.checkFav(email,  title)
                 val checkDB = film?.size !=0
                     if (checkDB){
                         view.btnfavorite.setImageResource(R.drawable.love)
                         toggleFavorite = "true"
-                        alreadyFavorite = true
+
                                                                                                                                               //codebyandika
                     }else {
                         view.btnfavorite.setImageResource(R.drawable.unlove )
                         toggleFavorite = "false"
-                        alreadyFavorite = false
+
                     }
             }
             }
@@ -116,7 +125,7 @@ class DetailFragment : Fragment() {
         }
 
         val fragment = childFragmentManager
-        val youtubefragment  =  fragment.findFragmentById(R.id.youtube_fragment) as? YouTubePlayerSupportFragment
+        val youtubefragment  =  fragment.findFragmentById(R.id.youtube_fragment) as? YouTubePlayerSupportFragmentXKt
         val change = fragment.findFragmentById(R.id.youtube_fragment)
         val newConfig = resources.configuration
         var c = change?.view?.layoutParams
@@ -148,7 +157,7 @@ class DetailFragment : Fragment() {
                 p0: YouTubePlayer.Provider?,
                 p1: YouTubeInitializationResult?
             ) {
-                TODO("Not yet implemented")
+
             }
 
         })
@@ -162,7 +171,7 @@ class DetailFragment : Fragment() {
                 btnfavorite.setImageResource(R.drawable.unlove)
                 toggleFavorite = "false"
                 GlobalScope.async {
-                    db?.getFavoriteDao()?.deleteFilmID(email, id.toInt())
+                    db?.getFavoriteDao()?.deleteFilmID(email,  title)
                 }
                 break
             }
@@ -182,8 +191,11 @@ class DetailFragment : Fragment() {
                             releaseDate,
                             synopsis,
                             title,
-                            "true"
-                            //codebyandika
+                            trailer,
+                            type
+
+
+                                                                                                            //codebyandika
                         )
                     )
                 }

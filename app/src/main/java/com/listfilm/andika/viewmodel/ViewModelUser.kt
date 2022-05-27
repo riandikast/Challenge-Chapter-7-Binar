@@ -3,7 +3,6 @@ package com.listfilm.andika.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.listfilm.andika.model.login.LoginResponse
 import com.listfilm.andika.model.update.UpdateResponse
 import com.listfilm.andika.model.user.GetAllUserItem
 import com.listfilm.andika.network.ApiClient
@@ -14,7 +13,7 @@ import retrofit2.Response
 class ViewModelUser : ViewModel(){
 
     var liveDataNewUserItem : MutableLiveData<List<GetAllUserItem>> = MutableLiveData()
-    var liveDataLogin : MutableLiveData<LoginResponse> = MutableLiveData()
+    var liveDataLogin : MutableLiveData<List<GetAllUserItem>> = MutableLiveData()
     var liveDataRegis : MutableLiveData<GetAllUserItem> = MutableLiveData()
     var liveDataUpdate : MutableLiveData<GetAllUserItem> = MutableLiveData()
 
@@ -23,7 +22,7 @@ class ViewModelUser : ViewModel(){
     }
 
     fun getLiveLoginObserver() : MutableLiveData<List<GetAllUserItem>> {
-        return liveDataNewUserItem
+        return liveDataLogin
     }
 
     fun getLiveRegisObserver() : MutableLiveData<GetAllUserItem> {
@@ -60,6 +59,7 @@ class ViewModelUser : ViewModel(){
                     if (getAllItem.isSuccessful){
                         liveDataNewUserItem.postValue(getAllItem.body())
 
+
                     }else{
                         liveDataNewUserItem.postValue(null)
 
@@ -71,12 +71,12 @@ class ViewModelUser : ViewModel(){
             })
     }
 
-    fun login(email :String, password : String){
-        ApiClient.instance.loginNewUser(email, password).enqueue(object :
-            Callback<LoginResponse> {
+    fun login(email :String){
+        ApiClient.instance.Login(email).enqueue(object :
+            Callback<List<GetAllUserItem>> {
             override fun onResponse(
-                call: Call<LoginResponse>,
-                response: Response<LoginResponse>)
+                call: Call<List<GetAllUserItem>>,
+                response: Response<List<GetAllUserItem>>)
             {
                 if (response.isSuccessful){
                     liveDataLogin.postValue(response.body())
@@ -85,7 +85,7 @@ class ViewModelUser : ViewModel(){
                     liveDataLogin.postValue(null)
                 }
             }
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            override fun onFailure(call: Call<List<GetAllUserItem>>, t: Throwable) {
                 liveDataLogin.postValue(null)
 
             }

@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:backgroundTint="@color/transparent"
-        android:id="@+id/cardpopular"
+        android:id="@+id/cardfav"
         android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="240dp">
@@ -28,13 +28,13 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="20dp"
                 android:src="@mipmap/ic_launcher"
-                android:id="@+id/gambarpopular"
+                android:id="@+id/gambarfav"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp">
             </ImageView>
 
             <TextView
-                android:id="@+id/text1populer"
+                android:id="@+id/text1fav"
                 android:layout_margin="20dp"
                 android:layout_below="@id/spasi"
                 android:text="ssss"
