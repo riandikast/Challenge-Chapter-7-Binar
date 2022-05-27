@@ -49,11 +49,13 @@ class LoginFragment : Fragment() {
 
         val daftar = view.findViewById<TextView>(R.id.daftar2)
         val login = view.findViewById<Button>(R.id.btnlogin)
-        getDataUserItem()
+
         daftar.setOnClickListener {
             view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
+
+        getDataUserItem()
         login.setOnClickListener {
             if (loginemail.text.isNotEmpty() && loginpassword.text.isNotEmpty()){
                 email = loginemail.text.toString()
@@ -82,7 +84,6 @@ class LoginFragment : Fragment() {
 
     fun check() {
         userManager = UserManager(requireContext())
-
         for (i in dataUser.indices) {
             if (email == dataUser[i].email && password == dataUser[i].password) {
                 GlobalScope.launch {

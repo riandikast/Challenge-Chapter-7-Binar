@@ -35,6 +35,7 @@ class FavoriteFragment : Fragment() {
     lateinit var adapterFavorite : AdapterFavorite
     lateinit var emailUser : String
     var idUser by Delegates.notNull<Int>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,8 +66,14 @@ class FavoriteFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     listdata.let {
                         if (listdata?.size == 0) {
-                            checkdatafav.text = "Belum ada favorite"
+                            view.checkdatafav.visibility = View.VISIBLE
+                            view.checkdataimage.visibility = View.VISIBLE
+
+                        }else{
+                            view.checkdatafav.visibility = View.GONE
+                            view.checkdataimage.visibility = View.GONE
                         }
+
                         adapterFavorite = AdapterFavorite(){
                             val bund = Bundle()
                             bund.putParcelable("detailfilmfromfav", it)

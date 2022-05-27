@@ -58,15 +58,37 @@
 
 
 
-
     <ScrollView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/checkdataimage"
+                android:layout_marginTop="250dp"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/homelove"
+                android:layout_width="150dp"
+                android:layout_height="150dp">
+
+            </ImageView>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:text="Belum Ada Favorite"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/checkdataimage"
+                android:id="@+id/checkdatafav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+            </TextView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listfav"
                 android:layout_width="match_parent"
@@ -78,17 +100,7 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <TextView
 
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:layout_centerInParent="true"
-                android:id="@+id/checkdatafav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-
-            </TextView>
         </RelativeLayout>
     </ScrollView>
 
