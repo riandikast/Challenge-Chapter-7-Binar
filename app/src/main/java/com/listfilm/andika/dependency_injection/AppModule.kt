@@ -1,6 +1,5 @@
 package com.listfilm.andika.dependency_injection
 
-
 import com.listfilm.andika.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -15,37 +14,41 @@ import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import javax.inject.Singleton
-import javax.net.ssl.*
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     const val BASE_URL = "https://627baa05a01c46a85322c5f7.mockapi.io/"
 
     private  val logging : HttpLoggingInterceptor
-        get(){
+        get() {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             return httpLoggingInterceptor.apply {
                 httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             }
         }
 
+    private  val clint = OkHttpClient.Builder().addInterceptor(logging).build()
+
     @Provides
     @Singleton
-    fun provieRetrofit() : Retrofit? =
-        getUnsafeOkHttpClient()?.let {
+    fun provideRetrofit() : Retrofit =
+        getUnsafeOkHttpClient().let {
             Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(it)
                 .build()
         }
-    }
 
     @Provides
     @Singleton
-    fun provideNewsApi(retrofit: Retrofit): ApiService =
+    fun provideService(retrofit: Retrofit) : ApiService =
         retrofit.create(ApiService::class.java)
 
     private fun getUnsafeOkHttpClient(): OkHttpClient? {
@@ -98,7 +101,6 @@ object AppModule {
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
+
     }
-
-
-
+}

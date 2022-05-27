@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
 
     fun getRecFilm(){
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModelMovie::class.java)
-        viewModel.recommendedMovie.observe(requireActivity()) {
+        viewModel.recMovie.observe(requireActivity()) {
             if(it != null){
                 adapterrecommend.setDataFilm(it)
                 adapterrecommend.notifyDataSetChanged()

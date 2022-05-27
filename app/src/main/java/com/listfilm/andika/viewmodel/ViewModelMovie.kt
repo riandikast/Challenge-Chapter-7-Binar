@@ -14,14 +14,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ViewModelMovie  @Inject constructor(api : ApiService): ViewModel() {
+class ViewModelMovie  @Inject constructor(private val api : ApiService): ViewModel() {
 
-    var liveDataNewFilm = MutableLiveData<List<GetMoviee>>()
+    private var liveDataNewFilm = MutableLiveData<List<GetMoviee>>()
     val newFilm : LiveData<List<GetMoviee>> = liveDataNewFilm
-    var liveDataPopularFilm = MutableLiveData<List<GetMoviee>>()
-    val popularMovie : LiveData<List<GetMoviee>> = liveDataPopularFilm
-    var liveDataRecFilm = MutableLiveData<List<GetMoviee>>()
-    val recommendedMovie : LiveData<List<GetMoviee>> = liveDataRecFilm
+    private var liveDataPopuarFilm = MutableLiveData<List<GetMoviee>>()
+    val popularMovie : LiveData<List<GetMoviee>> = liveDataPopuarFilm
+    private var liveDataRecFilm = MutableLiveData<List<GetMoviee>>()
+    val recMovie : LiveData<List<GetMoviee>> = liveDataRecFilm
 
 
     init {
@@ -30,16 +30,14 @@ class ViewModelMovie  @Inject constructor(api : ApiService): ViewModel() {
             delay(2000)
             liveDataNewFilm.value = datanewmovie
 
-        viewModelScope.launch {
+            val datarecmovie = api.getRecMovie()
+            delay(2000)
+            liveDataRecFilm.value = datarecmovie
+
             val datapopularmovie = api.getPopularMovie()
             delay(2000)
-            liveDataNewFilm.value = datapopularmovie
-        }
-            viewModelScope.launch {
-            val datarecommendmovie = api.getRecMovie()
-            delay(2000)
-            liveDataNewFilm.value = datarecommendmovie
-        }
+            liveDataPopuarFilm.value = datapopularmovie
+
     }
 
 

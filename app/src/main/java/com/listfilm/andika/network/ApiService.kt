@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
+
     @GET("PopularMovie")
     suspend fun getPopularMovie(): List<GetMoviee>
 

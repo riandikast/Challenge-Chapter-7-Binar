@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
                 bottomnav.visibility = View.VISIBLE
             } else if (destination.id == R.id.favoriteFragment ){
                 bottomnav.visibility = View.VISIBLE
-            }else if (destination.id == R.id.popularFragment ){
-                bottomnav.visibility = View.VISIBLE
             }
             else {
                 bottomnav.visibility = View.GONE
