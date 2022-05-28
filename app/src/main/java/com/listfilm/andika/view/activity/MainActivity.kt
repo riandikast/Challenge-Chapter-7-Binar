@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             if (it != null && it != ""){
                 Glide.with(this).load( it ).into(image)
             }else{
-                Glide.with(this).load( R.drawable.profile ).into(image)
+                Glide.with(this).load( R.drawable.pp ).into(image)
             }
 
 

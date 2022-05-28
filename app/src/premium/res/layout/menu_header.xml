@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+
             android:id="@+id/pph"
             android:layout_marginTop="20dp"
             android:layout_width="110dp"
@@ -26,7 +26,7 @@
             app:civ_border_color="#FF000000"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+
             android:id="@+id/pp2h"
             android:layout_marginTop="20dp"
             android:layout_width="110dp"

@@ -337,9 +337,11 @@ class ProfileFragment : Fragment() {
                     Glide.with(requireActivity()).load( it ).into(image)
                 }
             }else{
+
                 if (image != null) {
-                    Glide.with(requireActivity()).load( R.drawable.profile ).into(image)
+                    Glide.with(requireActivity()).load( R.drawable.pp ).into(image)
                 }
+
             }
 
 

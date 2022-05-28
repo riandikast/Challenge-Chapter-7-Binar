@@ -19,8 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
-            app:popupTheme="@style/Theme.AppCompat.Light"
+
             android:background="@color/orange">
 
             <ImageView
@@ -60,7 +59,7 @@
         android:layout_margin="15dp"
         app:menu="@menu/sidenav_menu"
         app:headerLayout="@layout/menu_header"
-        android:layout_width="190dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent">
 
     </com.google.android.material.navigation.NavigationView>

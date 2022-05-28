@@ -66,7 +66,7 @@ class LoginFragment : Fragment() {
                 password = loginpassword.text.toString()
 
                 check()
-                refreshHeader()
+
 
             }
             else{
@@ -159,36 +159,7 @@ class LoginFragment : Fragment() {
         toast.show()
     }
 
-    fun refreshHeader(){
-        val navView = activity?.findViewById<NavigationView>(R.id.nav_view)
-        val headerView = navView?.getHeaderView(0)
-        val image = headerView?.findViewById<ImageView>(R.id.pp2h)
-        val username = headerView?.findViewById<TextView>(R.id.usernamehint)
-        val email = headerView?.findViewById<TextView>(R.id.emailhint)
 
-        userManager.userImage.asLiveData().observe(requireActivity()){
-
-            if (it != null && it != ""){
-                if (image != null) {
-                    Glide.with(requireActivity()).load( it ).into(image)
-                }
-            }else{
-                if (image != null) {
-                    Glide.with(requireActivity()).load( R.drawable.profile ).into(image)
-                }
-            }
-
-
-        }
-        userManager.userUsername.asLiveData().observe(requireActivity()){
-
-            username?.text = it.toString()
-        }
-        userManager.userEmail.asLiveData().observe(requireActivity()){
-
-            email?.text = it.toString()
-        }
-    }
 
 
 
