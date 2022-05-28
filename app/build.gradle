@@ -25,6 +25,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "Default"
+    productFlavors{
+        free{
+            applicationIdSuffix = ".free"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/ic_launcher",
+                    appIconRound: "@mipmap/ic_launcher",
+
+
+            ]
+            resValue "string", "app_name", "MovFlix"
+        }
+        premium{
+            applicationIdSuffix = ".premium"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/ic_launcher",
+                    appIconRound: "@mipmap/ic_launcher"
+            ]
+            resValue "string", "app_name", "MovFlix Premium"
+
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

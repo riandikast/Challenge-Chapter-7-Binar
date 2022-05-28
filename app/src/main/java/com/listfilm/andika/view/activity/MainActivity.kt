@@ -18,6 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.listfilm.andika.BuildConfig
 import com.listfilm.andika.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         profilem.setOnClickListener {
             drawer.openDrawer(GravityCompat.END)
         }
+
         userManager = UserManager(this)
         val headerView = navView.getHeaderView(0)
         val image = headerView.findViewById<ImageView>(R.id.pp2h)
@@ -109,14 +111,24 @@ class MainActivity : AppCompatActivity() {
         })
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.homeFragment ) {
-                bottomnav.visibility = View.VISIBLE
+            if(BuildConfig.FLAVOR == "premium") {
+                if (destination.id == R.id.homeFragment) {
+                    bottomnav.visibility = View.VISIBLE
 
-            } else if (destination.id == R.id.favoriteFragment ){
-                bottomnav.visibility = View.VISIBLE
-            }
-            else {
-                bottomnav.visibility = View.GONE
+                } else if (destination.id == R.id.favoriteFragment) {
+                    bottomnav.visibility = View.VISIBLE
+                } else {
+                    bottomnav.visibility = View.GONE
+                }
+            }else{
+                if (destination.id == R.id.homeFragment) {
+                    bottomnav.visibility = View.GONE
+
+                } else if (destination.id == R.id.favoriteFragment) {
+                    bottomnav.visibility = View.GONE
+                } else {
+                    bottomnav.visibility = View.GONE
+                }
             }
 
         }

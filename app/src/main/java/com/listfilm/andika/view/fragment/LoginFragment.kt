@@ -170,11 +170,11 @@ class LoginFragment : Fragment() {
 
             if (it != null && it != ""){
                 if (image != null) {
-                    Glide.with(this).load( it ).into(image)
+                    Glide.with(requireActivity()).load( it ).into(image)
                 }
             }else{
                 if (image != null) {
-                    Glide.with(this).load( R.drawable.profile ).into(image)
+                    Glide.with(requireActivity()).load( R.drawable.profile ).into(image)
                 }
             }
 
