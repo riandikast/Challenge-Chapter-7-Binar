@@ -37,6 +37,8 @@ import com.listfilm.andika.viewmodel.ViewModelUser
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.logout_dialog.view.*
+
+import kotlinx.android.synthetic.premium.removepic_dialog.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -149,6 +151,29 @@ class ProfileFragment : Fragment() {
                 startGallery()
             }
         }
+
+
+            view.pp2.setOnClickListener {
+                val custom = LayoutInflater.from(requireContext()).inflate(R.layout.removepic_dialog, null)
+                val a = AlertDialog.Builder(requireContext())
+                    .setView(custom)
+                    .create()
+
+                custom.btnltidak.setOnClickListener {
+                    a.dismiss()
+                }
+
+                custom.btnlya.setOnClickListener {
+
+                    Glide.with(requireActivity()).load( R.drawable.pp ).into(pp2)
+                    image = ""
+                    a.dismiss()
+
+                }
+                a.show()
+
+        }
+
         return view
     }
 
