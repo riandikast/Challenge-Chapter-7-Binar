@@ -57,6 +57,7 @@
         <action
             android:id="@+id/action_homeFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -92,4 +93,5 @@
             android:id="@+id/action_favoriteFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+
 </navigation>

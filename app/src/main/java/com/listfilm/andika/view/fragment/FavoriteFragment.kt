@@ -50,9 +50,9 @@ class FavoriteFragment : Fragment() {
             view.welcomefav.text = it.toString()
         }
 
-        view.profilefav.setOnClickListener {
-            view.findNavController().navigate(R.id.action_favoriteFragment_to_profileFragment)
-        }
+//        view.profilefav.setOnClickListener {
+//            view.findNavController().navigate(R.id.action_favoriteFragment_to_profileFragment)
+//        }
         userManager.userID.asLiveData().observe(requireActivity()){
             idUser = it.toInt()
         }

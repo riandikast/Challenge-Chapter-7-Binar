@@ -12,12 +12,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
 import com.listfilm.andika.R
 import com.listfilm.andika.model.user.GetAllUserItem
 import com.listfilm.andika.viewmodel.ViewModelUser
@@ -62,6 +66,7 @@ class LoginFragment : Fragment() {
                 password = loginpassword.text.toString()
 
                 check()
+                refreshHeader()
 
             }
             else{
@@ -152,6 +157,37 @@ class LoginFragment : Fragment() {
         layout.setBackgroundColor(Color.DKGRAY)
         toast.setView(layout)
         toast.show()
+    }
+
+    fun refreshHeader(){
+        val navView = activity?.findViewById<NavigationView>(R.id.nav_view)
+        val headerView = navView?.getHeaderView(0)
+        val image = headerView?.findViewById<ImageView>(R.id.pp2h)
+        val username = headerView?.findViewById<TextView>(R.id.usernamehint)
+        val email = headerView?.findViewById<TextView>(R.id.emailhint)
+
+        userManager.userImage.asLiveData().observe(requireActivity()){
+
+            if (it != null && it != ""){
+                if (image != null) {
+                    Glide.with(this).load( it ).into(image)
+                }
+            }else{
+                if (image != null) {
+                    Glide.with(this).load( R.drawable.profile ).into(image)
+                }
+            }
+
+
+        }
+        userManager.userUsername.asLiveData().observe(requireActivity()){
+
+            username?.text = it.toString()
+        }
+        userManager.userEmail.asLiveData().observe(requireActivity()){
+
+            email?.text = it.toString()
+        }
     }
 
 

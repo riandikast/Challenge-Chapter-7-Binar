@@ -8,15 +8,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 
 import com.listfilm.andika.R
 import com.listfilm.andika.view.adapter.AdapterHome
 import com.listfilm.andika.viewmodel.ViewModelMovie
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.stream.Collectors.toList
 
@@ -28,6 +33,7 @@ class HomeFragment : Fragment() {
     lateinit var adapterpopular :AdapterHome
     lateinit var userManager : UserManager
     lateinit var email : String
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,9 +88,11 @@ class HomeFragment : Fragment() {
             view.welcome.text = it.toString()
         }
 
-        view.profile.setOnClickListener {
-            view.findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-        }
+
+//        view.profile.setOnClickListener {
+//            view.findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+//
+//        }
 
 
         return view

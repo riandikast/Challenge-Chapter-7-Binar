@@ -13,16 +13,11 @@ import retrofit2.Response
 class ViewModelUser : ViewModel(){
 
     var liveDataNewUserItem : MutableLiveData<List<GetAllUserItem>> = MutableLiveData()
-    var liveDataLogin : MutableLiveData<List<GetAllUserItem>> = MutableLiveData()
     var liveDataRegis : MutableLiveData<GetAllUserItem> = MutableLiveData()
     var liveDataUpdate : MutableLiveData<GetAllUserItem> = MutableLiveData()
 
     fun getLiveUserObserver() : MutableLiveData<List<GetAllUserItem>> {
         return liveDataNewUserItem
-    }
-
-    fun getLiveLoginObserver() : MutableLiveData<List<GetAllUserItem>> {
-        return liveDataLogin
     }
 
     fun getLiveRegisObserver() : MutableLiveData<GetAllUserItem> {
@@ -71,26 +66,6 @@ class ViewModelUser : ViewModel(){
             })
     }
 
-    fun login(email :String){
-        ApiClient.instance.Login(email).enqueue(object :
-            Callback<List<GetAllUserItem>> {
-            override fun onResponse(
-                call: Call<List<GetAllUserItem>>,
-                response: Response<List<GetAllUserItem>>)
-            {
-                if (response.isSuccessful){
-                    liveDataLogin.postValue(response.body())
-
-                }else{
-                    liveDataLogin.postValue(null)
-                }
-            }
-            override fun onFailure(call: Call<List<GetAllUserItem>>, t: Throwable) {
-                liveDataLogin.postValue(null)
-
-            }
-        })
-    }
 
     fun regisUser(username: String, email: String, password: String) {
         ApiClient.instance.registerNew(username, email, password, "","","","")

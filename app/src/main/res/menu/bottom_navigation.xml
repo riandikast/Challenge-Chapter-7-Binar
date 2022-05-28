@@ -11,10 +11,6 @@
         android:title="Favorite"
         android:icon="@drawable/unlove">
     </item>
-    <item
-        android:id="@+id/navsettings"
-        android:title="Settings"
-        android:icon="@drawable/menu">
-    </item>
+
 
 </menu>

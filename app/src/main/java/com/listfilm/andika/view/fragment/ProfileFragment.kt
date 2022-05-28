@@ -17,6 +17,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -29,6 +30,7 @@ import androidx.lifecycle.asLiveData
 import androidx.navigation.findNavController
 
 import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
 import com.listfilm.andika.R
 import com.listfilm.andika.model.update.UpdateResponse
 import com.listfilm.andika.viewmodel.ViewModelUser
@@ -98,6 +100,7 @@ class ProfileFragment : Fragment() {
             userManager.userID.asLiveData().observe(requireActivity()){
                 idUser = it
             }
+
             username = view.update1.text.toString()
             cn = view.update2.text.toString()
             dateofbirth = view.update3.text.toString()
@@ -110,6 +113,34 @@ class ProfileFragment : Fragment() {
             updateDataUser(idUser.toInt(), dataUser)
 
             view.findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
+            val navView = activity?.findViewById<NavigationView>(R.id.nav_view)
+            val headerView = navView?.getHeaderView(0)
+            val image = headerView?.findViewById<ImageView>(R.id.pp2h)
+            val username = headerView?.findViewById<TextView>(R.id.usernamehint)
+            val email = headerView?.findViewById<TextView>(R.id.emailhint)
+
+            userManager.userImage.asLiveData().observe(requireActivity()){
+
+                if (it != null && it != ""){
+                    if (image != null) {
+                        Glide.with(this).load( it ).into(image)
+                    }
+                }else{
+                    if (image != null) {
+                        Glide.with(this).load( R.drawable.profile ).into(image)
+                    }
+                }
+
+
+            }
+            userManager.userUsername.asLiveData().observe(requireActivity()){
+
+                username?.text = it.toString()
+            }
+            userManager.userEmail.asLiveData().observe(requireActivity()){
+
+                email?.text = it.toString()
+            }
 
         }
 
@@ -222,7 +253,7 @@ class ProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == 2000 && data != null){
-            pp.setImageURI(data?.data)
+            pp2.setImageURI(data?.data)
             image = data?.data.toString()
         }else {
 
@@ -318,5 +349,7 @@ class ProfileFragment : Fragment() {
 
         dpd.show()
     }
+
+
 
 }

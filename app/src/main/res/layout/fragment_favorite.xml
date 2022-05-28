@@ -39,7 +39,7 @@
 
         <ImageView
             android:id="@+id/profilefav"
-            android:src="@drawable/profile"
+
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:layout_width="30dp"
